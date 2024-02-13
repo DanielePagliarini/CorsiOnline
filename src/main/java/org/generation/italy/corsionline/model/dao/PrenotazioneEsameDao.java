@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,29 +21,22 @@ public class PrenotazioneEsameDao extends ADao {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void addPrenotazioneEsame(PrenotazioneEsame prenotazioneEsame) 
-				throws CorsiOnlineModelException {
-		 try {           
-	            
-	        	//TRIGGER TEMPORANEAMENTE DISATTIVATO: RIATTIVARE PER VERIFICA
-//	        	Trigger.checkBeforeInsertMovimento(movimento);
-	        	
+	public void addPrenotazioneEsame(PrenotazioneEsame prenotazioneEsame) throws CorsiOnlineModelException {
+	    try {
+	        PreparedStatement preparedStatement = this.jdbcConnectionToDatabase.prepareStatement(QueryCatalog.insertPrenotazioneEsame);
 	        
-	        	
-	        	//INSERISCE MOVIMENTO
-	        	
-	            PreparedStatement preparedStatement = this.jdbcConnectionToDatabase.prepareStatement(QueryCatalog.insertPrenotazioneEsame);
-	            
-	            preparedStatement.setInt(1, prenotazioneEsame.getIdEsame());
-	            preparedStatement.setInt(2, prenotazioneEsame.getIdUtente());           
-	            preparedStatement.setTimestamp(3,Timestamp.valueOf(prenotazioneEsame.getDataPrenotazione()));            
-	            
-	            preparedStatement.executeUpdate();
-		 }
-		 catch (SQLException sqlException) {
+	        preparedStatement.setInt(1, prenotazioneEsame.getIdEsame());
+	        preparedStatement.setInt(2, prenotazioneEsame.getIdUtente());           
+	        preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now())); // Utilizza la data e l'ora attuali
 
-				throw new CorsiOnlineModelException("PrenotazioneEsameDao -> add Prenotazione Esame -> " + sqlException.getMessage());
-		 }
-
-		 }  
-		} 
+	        // Esegui l'operazione di inserimento nel database
+	        preparedStatement.executeUpdate();
+	       
+	        // Conferma la transazione
+	        this.jdbcConnectionToDatabase.commit();
+	    } catch (SQLException sqlException) {
+	        // Gestione dell'eccezione
+	        throw new CorsiOnlineModelException("PrenotazioneEsameDao -> add Prenotazione Esame -> " + sqlException.getMessage());
+	    }
+	}
+}

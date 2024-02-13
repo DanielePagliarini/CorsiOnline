@@ -2,7 +2,6 @@ package org.generation.italy.corsionline.control;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,154 +10,75 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.generation.italy.corsionline.model.entity.*;
 import org.generation.italy.corsionline.model.CorsiOnlineModelException;
-import org.generation.italy.corsionline.model.JdbcConnection;
 import org.generation.italy.corsionline.model.TestJdbcCorsiOnline;
+import org.generation.italy.corsionline.model.entity.PrenotazioneEsame;
+import org.generation.italy.corsionline.control.UserMessages;
 
-@WebServlet(urlPatterns = { "/prenotazione", }) // java annotation
-												// WebServlet:
-												// indicazione per
-												// il container
-												// (GlassFish) con
-												// le action della
-												// URI inviata dal
-												// client che la
-												// servlet intende
-												// gestire
+@WebServlet(urlPatterns = { "/prenotazione", "/form-prenotazione" })
 public class UtenteServletJ2EE extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        executeAction(request, response);
+    }
 
-	public void init() { // metodo che viene richiamato dal container al momento della installazione
-							// della webapp in esso con mappatura della servlet (l'altro Ë 'destroy' (al
-							// momento della rimozione della servlet dal container), non gestito in questa
-							// servlet).
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        executeAction(request, response);
+    }
 
-	}
+    protected void executeAction(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String actionName = request.getServletPath();
+        switch (actionName.toLowerCase().trim()) {
+            case "/prenotazione":
+                actionPrenotazione(request, response);
+                break;
+            case "/form-prenotazione":
+                actionFormPrenotazione(request, response);
+                break;
+            default:
+                break;
+        }
+    }
 
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) // metodo chiamato dal container
-																					// (GlassFish), a seguito di
-																					// ricezione da parte sua del
-																					// messaggio HTTP-Request, con
-																					// metodo POST inviato dal client
-																					// (browser)
-			throws ServletException, IOException {
-		executeAction(request, response); // re-inoltra al metodo doGet la gestione della action | request e response
-											// sono istanze di tipo HttpServletRequest ed HttpServletResponse, create
-											// dal container per fornire a e ricevere dalla servlet i dettagli circa i
-											// messaggi di HTTP-Request ed HTTP-Response ricevuti da ed inviati al
-											// client.
-	}
+    private void actionFormPrenotazione(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("form-prenotazione.jsp");
+        dispatcher.forward(request, response);
+    }
 
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) // metodo chiamato dal container
-																					// (GlassFish), a seguito di
-																					// ricezione da parte sua del
-																					// messaggio HTTP-Request, con
-																					// metodo GET inviato dal client
-																					// (browser)
-			throws ServletException, IOException {
-		executeAction(request, response); // re-inoltra al metodo doGet la gestione della action | request e response
-											// sono istanze di tipo HttpServletRequest ed HttpServletResponse, create
-											// dal container per fornire a e ricevere dalla servlet i dettagli circa i
-											// messaggi di HTTP-Request ed HTTP-Response ricevuti da ed inviati al
-											// client.
+    private void actionPrenotazione(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String messageToShow = UserMessages.msgPrenotazioneEsameOk;
 
-	}
+        // Ottieni i parametri direttamente, senza effettuare controlli aggiuntivi
+        int idEsame = Integer.parseInt(request.getParameter("idEsame"));
+        int idUtente = Integer.parseInt(request.getParameter("idUtente"));
 
-	protected void executeAction(HttpServletRequest request, HttpServletResponse response) // metodo chiamato dal
-																							// container (GlassFish), a
-																							// seguito di ricezione da
-																							// parte sua del messaggio
-																							// HTTP-Request, con metodo
-																							// GET inviato dal client
-																							// (browser)
-			throws ServletException, IOException {
+        try {
+            // Ottieni la data e l'ora correnti
+            LocalDateTime dataPrenotazione = LocalDateTime.now();
 
-		String actionName = request.getServletPath(); // parte action della URI: gestione della azione applicativa, la
-														// parte della URL dopo il nome della webapp...
-		switch (actionName.toLowerCase().trim()) {
+            PrenotazioneEsame prenotazioneEsame = new PrenotazioneEsame(idEsame, idUtente, dataPrenotazione);
 
-		// http://localhost:8081/banca/operatore-banca/apri-conto-cliente?iban=ESaa0123456789012345678901234567&codice-fiscale=MRRGVN0123456789&valuta=EUR
-//		case "/versamento":
-//			actionVersamento(request, response);
-//			break;
-//
-//		case "/form-versamento":
-//			actionFormVersamento(request, response);
-//			break;
-//
-//		case "/prelievo":
-//			actionPrelievo(request, response);
-//			break;
-//
-//		case "/form-prelievo":
-//			actionFormPrelievo(request, response);
-//			break;
-		case "/prenotazione":
-			actionPrenotazione(request, response);
-			break;
-		case "/form-prenotazione":
-			actionFormPrenotazione(request, response);
-			break;
+            TestJdbcCorsiOnline testJdbcCorsiOnline = new TestJdbcCorsiOnline();
+            testJdbcCorsiOnline.getPrenotazioneEsameDao().addPrenotazioneEsame(prenotazioneEsame);
 
-		default:
-			;
-		}
+            messageToShow = UserMessages.msgPrenotazioneEsameOk;
+        } catch (NumberFormatException e) {
+            // Gestione dell'eccezione nel caso in cui la stringa non possa essere convertita in un numero
+            messageToShow = "Errore: uno o pi√π parametri non sono validi";
+        } catch (CorsiOnlineModelException e) {
+            messageToShow = UserMessages.msgErrorePrenotazioneEsame;
+        }
 
-	}
-//
-
-	private static void actionFormPrenotazione(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("form-prenotazione.jsp");
-		// ottiene il riferimento alla apgina JSP
-		dispatcher.forward(request, response);
-	
-	}
-
-
-
-	private static void actionPrenotazione(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// throws BancaControlException, BancaModelException {
-
-		String messageToShow = UserMessages.msgPrenotazioneEsameOk; // default: messaggio per, successo esito apertura
-																	// conto
-
-		String idUtenteString = request.getParameter("id Utente") != null ? request.getParameter("id Utente") : "";
-		String idEsameString = request.getParameter("id Esame") != null ? request.getParameter("id Esame") : "";
-		String dataPrenotazioneString = request.getParameter("data prenotazione") != null ? request.getParameter("data prenotazione") : "";
-	    
-
-	    try {
-	    	  int idEsame = Integer.parseInt(idEsameString);
-	    	  int idUtente = Integer.parseInt(idUtenteString);
-	    	  LocalDateTime dataPrenotazione = LocalDateTime.parse(dataPrenotazioneString);
-	    	
-	    					// accede alla fonte dati, istanziando TEstJdbcBanca
-	    					// che ha come attributi i riferimenti ai metodi delle classi DAO.
-	    					PrenotazioneEsame prenotazioneEsame = new PrenotazioneEsame(idEsame,idUtente,dataPrenotazione);
-	    	
-	    					TestJdbcCorsiOnline testJdbcCorsiOnline = new TestJdbcCorsiOnline();
-	    					testJdbcCorsiOnline.getPrenotazioneEsameDao().addPrenotazioneEsame(prenotazioneEsame);
-	    	
-	    					messageToShow = UserMessages.msgPrenotazioneEsameOk;
-	    	
-	    				} catch (CorsiOnlineModelException e) {
-	    					messageToShow = UserMessages.msgErrorePrenotazioneEsame;
-	    				}
-	    
-	    
-	    
-		request.setAttribute("message-to-show", messageToShow);
-		// imposta il parametro nominativoUtenteLoggato
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("message.jsp");
-		// ottiene il riferimento alla apgina JSP
-		dispatcher.forward(request, response);
-
-	    			}
-	}
+        request.setAttribute("message-to-show", messageToShow);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("message.jsp");
+        dispatcher.forward(request, response);
+    }
+}

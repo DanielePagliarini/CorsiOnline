@@ -4,7 +4,7 @@ public class UserMessages {
 
 	
 	//Messaggi per l'attore utente
-	public static final String msgPrenotazioneEsameOk = "L'esame è stato prenotato correttamente!";
-	public static final String msgErrorePrenotazioneEsame = "L'esame non è stato prenotato correttamente!";
+	public static final String msgPrenotazioneEsameOk = "L'esame Ã¨ stato prenotato correttamente!";
+	public static final String msgErrorePrenotazioneEsame = "L'esame non Ã¨ stato prenotato correttamente!";
 	
 }

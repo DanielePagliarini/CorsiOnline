@@ -29,7 +29,7 @@ public class TestJdbcCorsiOnline {
 	public TestJdbcCorsiOnline() throws CorsiOnlineModelException {
 
 		this.dbConnection = JdbcConnection.readJdbcConnectionInstance("mariadb", "org.mariadb.jdbc.Driver", "localhost",
-				"3306", "corsi online", "root", "").getDbConnection();
+				"3306", "corsi_online", "root", "").getDbConnection();
 
 		this.cartaDao = new CartaDao(this.dbConnection);
 		this.utenteDao = new UtenteDao(this.dbConnection);
