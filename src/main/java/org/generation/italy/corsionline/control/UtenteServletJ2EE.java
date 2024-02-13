@@ -16,16 +16,16 @@ import org.generation.italy.corsionline.model.CorsiOnlineModelException;
 import org.generation.italy.corsionline.model.JdbcConnection;
 import org.generation.italy.corsionline.model.TestJdbcCorsiOnline;
 
-@WebServlet(urlPatterns = { "", }) // java annotation
-																									// WebServlet:
-																									// indicazione per
-																									// il container
-																									// (GlassFish) con
-																									// le action della
-																									// URI inviata dal
-																									// client che la
-																									// servlet intende
-																									// gestire
+@WebServlet(urlPatterns = { "/prenotazione", }) // java annotation
+												// WebServlet:
+												// indicazione per
+												// il container
+												// (GlassFish) con
+												// le action della
+												// URI inviata dal
+												// client che la
+												// servlet intende
+												// gestire
 public class UtenteServletJ2EE extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -99,6 +99,10 @@ public class UtenteServletJ2EE extends HttpServlet {
 //			break;
 		case "/prenotazione":
 			actionPrenotazione(request, response);
+			break;
+		case "/form-prenotazione":
+			actionFormPrenotazione(request, response);
+			break;
 
 		default:
 			;
@@ -106,6 +110,16 @@ public class UtenteServletJ2EE extends HttpServlet {
 
 	}
 //
+
+	private static void actionFormPrenotazione(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("form-prenotazione.jsp");
+		// ottiene il riferimento alla apgina JSP
+		dispatcher.forward(request, response);
+	
+	}
+
+
 
 	private static void actionPrenotazione(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -117,121 +131,34 @@ public class UtenteServletJ2EE extends HttpServlet {
 		String idUtenteString = request.getParameter("id Utente") != null ? request.getParameter("id Utente") : "";
 		String idEsameString = request.getParameter("id Esame") != null ? request.getParameter("id Esame") : "";
 		String dataPrenotazioneString = request.getParameter("data prenotazione") != null ? request.getParameter("data prenotazione") : "";
-	    LocalDateTime LocalDateTimeValue = LocalDateTime.parse(dataPrenotazioneString);
+	    
 
-//	private static void actionVersamento(HttpServletRequest request, HttpServletResponse response)
-//			throws ServletException, IOException {
-//		// throws BancaControlException, BancaModelException {
-//
-//		String messageToShow = UserMessages.msgEsitoVersamentoOk; // default: messaggio per, successo esito apertura
-//																	// conto
-//
-//		String ibanString = request.getParameter("iban") != null ? request.getParameter("iban") : "";
-//		String importoString = request.getParameter("importo") != null ? request.getParameter("importoString") : "";
-//
-//		// controlli sintattici e semantici su parametri da web
-//		if ((!UtilitiesControlliSintatticiSemantici.checkFormatIban(ibanString))
-//
-//				||
-//
-//				(!UtilitiesControlliSintatticiSemantici.checkFormatImporto(importoString))
-//
-//		) {
-//
-//			messageToShow = UserMessages.msgErroreParametriAperturaConto;
-//			// throw new BancaControlException("OperatoreBancaSErvlet ->
-//			// actionApriContoCliente -> Errore nel formato dei dati input!!!");
-//
-//		} else {
-//
-//			try {
-//
-//				Float importo = Float.parseFloat(importoString);
-//
-//				// accede alla fonte dati, istanziando TEstJdbcBanca
-//				// che ha come attributi i riferimenti ai metodi delle classi DAO.
-//				Movimento movimento = new Movimento(ibanString, importo, "V");
-//
-//				TestJdbcScidafa testJdbcBanca = new TestJdbcScidafa();
-//				testJdbcBanca.getMovimentoDao().addMovimento(movimento);
-//
-//				messageToShow = UserMessages.msgEsitoVersamentoOk;
-//
-//			} catch (BancaModelException e) {
-//				messageToShow = UserMessages.msgErroreOperazioneVersamento;
-//			}
-//		}
-//
-//		// **************************************************************
-//		// mostra interfaccia html/jsp di messaggistica per esito operazione
-//		// **************************************************************
-//
-//		request.setAttribute("message-to-show", messageToShow);
-//		// imposta il parametro nominativoUtenteLoggato
-//
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("message.jsp");
-//		// ottiene il riferimento alla apgina JSP
-//		dispatcher.forward(request, response);
+	    try {
+	    	  int idEsame = Integer.parseInt(idEsameString);
+	    	  int idUtente = Integer.parseInt(idUtenteString);
+	    	  LocalDateTime dataPrenotazione = LocalDateTime.parse(dataPrenotazioneString);
+	    	
+	    					// accede alla fonte dati, istanziando TEstJdbcBanca
+	    					// che ha come attributi i riferimenti ai metodi delle classi DAO.
+	    					PrenotazioneEsame prenotazioneEsame = new PrenotazioneEsame(idEsame,idUtente,dataPrenotazione);
+	    	
+	    					TestJdbcCorsiOnline testJdbcCorsiOnline = new TestJdbcCorsiOnline();
+	    					testJdbcCorsiOnline.getPrenotazioneEsameDao().addPrenotazioneEsame(prenotazioneEsame);
+	    	
+	    					messageToShow = UserMessages.msgPrenotazioneEsameOk;
+	    	
+	    				} catch (CorsiOnlineModelException e) {
+	    					messageToShow = UserMessages.msgErrorePrenotazioneEsame;
+	    				}
+	    
+	    
+	    
+		request.setAttribute("message-to-show", messageToShow);
+		// imposta il parametro nominativoUtenteLoggato
 
-//	}
-//
-//	private static void actionFormPrelievo(HttpServletRequest request, HttpServletResponse response)
-//			throws ServletException, IOException {
-//
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("form-prelievo.jsp");
-//		// ottiene il riferimento alla apgina JSP
-//		dispatcher.forward(request, response);
-//
-//	}
+		RequestDispatcher dispatcher = request.getRequestDispatcher("message.jsp");
+		// ottiene il riferimento alla apgina JSP
+		dispatcher.forward(request, response);
 
-//	private static void actionPrelievo(HttpServletRequest request, HttpServletResponse response)
-//			throws ServletException, IOException {
-//		// throws BancaControlException, BancaModelException {
-//
-//		String messageToShow = UserMessages.msgEsitoPrelievoOk; // default: messaggio per, successo esito apertura conto
-//
-//		String ibanString = request.getParameter("iban") != null ? request.getParameter("iban") : "";
-//		String importoString = request.getParameter("importo") != null ? request.getParameter("importoString") : "";
-//
-////		controlli sintattici e semantici su parametri da web
-//		if (!UtilitiesControlliSintatticiSemantici.checkFormatImporto(importoString)) {
-//
-//			messageToShow = UserMessages.msgErroreParametriPrelievo;
-//			// throw new BancaControlException("OperatoreBancaSErvlet ->
-//			// actionApriContoCliente -> Errore nel formato dei dati input!!!");
-//
-//		} else {
-//
-//			try {
-//
-//				Float importo = Float.parseFloat(importoString);
-//
-//				// accede alla fonte dati, istanziando TEstJdbcBanca
-//				// che ha come attributi i riferimenti ai metodi delle classi DAO.
-//				Movimento movimento = new Movimento(ibanString, importo, "P");
-//
-//				TestJdbcScidafa testJdbcBanca = new TestJdbcScidafa();
-//				testJdbcBanca.getMovimentoDao().addMovimento(movimento);
-//
-//				messageToShow = UserMessages.msgEsitoPrelievoOk;
-//
-//			} catch (BancaModelException e) {
-//				messageToShow = UserMessages.msgErroreOperazionePrelievo;
-//			}
-//		}
-//
-//		// **************************************************************
-//		// mostra interfaccia html/jsp di messaggistica per esito operazione
-//		// **************************************************************
-//
-//		request.setAttribute("message-to-show", messageToShow);
-//		// imposta il parametro nominativoUtenteLoggato
-//
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("message.jsp");
-//		// ottiene il riferimento alla apgina JSP
-//		dispatcher.forward(request, response);
-//
-//	}
-
-}
-}
+	    			}
+	}

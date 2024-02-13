@@ -1,21 +1,27 @@
 package org.generation.italy.corsionline.model.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class PrenotazioneEsame {
     private int idEsame;
     private int idPrenotazione;
     private int idUtente;
-    private Date dataPrenotazione;
+    private LocalDateTime dataPrenotazione;
     
     
-	public PrenotazioneEsame(int idEsame, int idPrenotazione, int idUtente, Date dataPrenotazione) {
+	
+
+
+	public PrenotazioneEsame(int idEsame, int idUtente, LocalDateTime dataPrenotazione) {
 		super();
 		this.idEsame = idEsame;
-		this.idPrenotazione = idPrenotazione;
 		this.idUtente = idUtente;
 		this.dataPrenotazione = dataPrenotazione;
 	}
+
+
+
 
 
 	public int getIdEsame() {
@@ -23,9 +29,15 @@ public class PrenotazioneEsame {
 	}
 
 
+
+
+
 	public void setIdEsame(int idEsame) {
 		this.idEsame = idEsame;
 	}
+
+
+
 
 
 	public int getIdPrenotazione() {
@@ -33,9 +45,15 @@ public class PrenotazioneEsame {
 	}
 
 
+
+
+
 	public void setIdPrenotazione(int idPrenotazione) {
 		this.idPrenotazione = idPrenotazione;
 	}
+
+
+
 
 
 	public int getIdUtente() {
@@ -43,21 +61,31 @@ public class PrenotazioneEsame {
 	}
 
 
+
+
+
 	public void setIdUtente(int idUtente) {
 		this.idUtente = idUtente;
 	}
 
 
-	public Date getDataPrenotazione() {
+
+
+
+	public LocalDateTime getDataPrenotazione() {
 		return dataPrenotazione;
 	}
 
 
-	public void setDataPrenotazione(Date dataPrenotazione) {
+
+
+
+	public void setDataPrenotazione(LocalDateTime dataPrenotazione) {
 		this.dataPrenotazione = dataPrenotazione;
 	}
-    
+
 }
+	
     
     
 	

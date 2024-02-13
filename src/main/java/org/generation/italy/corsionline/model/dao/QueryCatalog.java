@@ -13,6 +13,11 @@ public class QueryCatalog {
 
 	
 	//localhost:8081/ricerca-cliente?codice-fiscale=PSQNSL00121312412;DROP DATABASE banca;
+	public static final String insertPrenotazioneEsame =
+			" INSERT INTO prenotazioneesame (id_esame, id_utente, data_prenotazione) VALUES (?, ?, ?) ";
+			
+			
+			
     public static final String selectFromClienteByPrimaryKey =
               " SELECT codice_fiscale, nominativo, indirizzo	"
             + "   FROM cliente                                  "
