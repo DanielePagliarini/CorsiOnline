@@ -25,8 +25,8 @@ public class PagamentoEsameDao extends ADao {
 	        preparedStatement.setInt(1, pagamentoEsame.getIdEsame());
 	        preparedStatement.setInt(2, pagamentoEsame.getIdUtente());   
 	        preparedStatement.setInt(3, pagamentoEsame.getIdPrenotazione());
-	        preparedStatement.setString(4, pagamentoEsame.getNrCarta());
-	        preparedStatement.setBigDecimal(5, pagamentoEsame.getImporto()); // Assicurati di avere un metodo getImporto() nella classe PagamentoEsame
+	        preparedStatement.setBigDecimal(4, pagamentoEsame.getImporto());
+	        preparedStatement.setString(5, pagamentoEsame.getNrCarta()); // Assicurati di avere un metodo getImporto() nella classe PagamentoEsame
 	        preparedStatement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now())); // Utilizza la data e l'ora attuali
 	        
 

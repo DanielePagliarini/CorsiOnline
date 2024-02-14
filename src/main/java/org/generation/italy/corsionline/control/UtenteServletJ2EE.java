@@ -51,9 +51,14 @@ public class UtenteServletJ2EE extends HttpServlet {
 		case "/form-pagamento":
 			actionFormPagamento(request, response);
 			break;
+			
+		
+		
 
 		}
 	}
+
+	
 
 	private void actionFormPrenotazione(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -103,11 +108,13 @@ public class UtenteServletJ2EE extends HttpServlet {
 		String messageToShow = UserMessages.msgPagamentoEsameOk;
 
 		// Ottieni i parametri direttamente, senza effettuare controlli aggiuntivi
-		String nrCarta = request.getParameter("nrCarta");
+		
+//		String ibanString = request.getParameter("iban") != null ? request.getParameter("iban") : "";
 		int idEsame = Integer.parseInt(request.getParameter("idEsame"));
 		int idUtente = Integer.parseInt(request.getParameter("idUtente"));
 		int idPrenotazione = Integer.parseInt(request.getParameter("idPrenotazione"));
 		BigDecimal importo = new BigDecimal(request.getParameter("importo"));
+		String nrCarta = request.getParameter("nr_carta");
 
 		try {
 			// Ottieni la data e l'ora correnti

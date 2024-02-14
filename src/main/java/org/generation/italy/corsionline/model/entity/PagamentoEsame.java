@@ -5,23 +5,23 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class PagamentoEsame {
-    private int idPagamento;
-    private LocalDateTime dataPagamento;
-    private BigDecimal importo;
-    private int idUtente;
-    private int idEsame;
-    private int idPrenotazione;
-    private String nrCarta;
-    
-	public PagamentoEsame( LocalDateTime dataPagamento, BigDecimal importo, int idUtente, int idEsame,int idPrenotazione,String nrCarta) {
+	private int idPagamento;
+	private LocalDateTime dataPagamento;
+	private BigDecimal importo;
+	private int idUtente;
+	private int idEsame;
+	private int idPrenotazione;
+	private String nrCarta;
+
+	public PagamentoEsame(LocalDateTime dataPagamento, BigDecimal importo, int idUtente, int idEsame,
+			int idPrenotazione, String nrCarta) {
 		super();
-		
 		this.dataPagamento = dataPagamento;
 		this.importo = importo;
 		this.idUtente = idUtente;
 		this.idEsame = idEsame;
-		this.idPrenotazione =idPrenotazione;
-		this.nrCarta =nrCarta;
+		this.idPrenotazione = idPrenotazione;
+		this.nrCarta = nrCarta;
 	}
 
 	public String getNrCarta() {
@@ -79,5 +79,5 @@ public class PagamentoEsame {
 	public void setIdEsame(int idEsame) {
 		this.idEsame = idEsame;
 	}
-    
+
 }
