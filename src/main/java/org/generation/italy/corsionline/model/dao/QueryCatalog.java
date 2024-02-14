@@ -13,6 +13,12 @@ public class QueryCatalog {
 
 	
 	//localhost:8081/ricerca-cliente?codice-fiscale=PSQNSL00121312412;DROP DATABASE banca;
+	
+	public static final String insertPagamentoEsame =
+		    " INSERT INTO pagamentoesame (id_esame, id_utente, data_pagamento , id_prenotazione, importo, nr_Carta) VALUES (?,?,?,?,?,?)";
+		     
+		   
+
 	public static final String insertPrenotazioneEsame =
 			" INSERT INTO prenotazioneesame (id_esame, id_utente, data_prenotazione) VALUES (?, ?, ?) ";
 			

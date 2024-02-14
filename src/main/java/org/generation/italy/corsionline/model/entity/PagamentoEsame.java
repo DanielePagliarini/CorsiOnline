@@ -10,14 +10,34 @@ public class PagamentoEsame {
     private BigDecimal importo;
     private int idUtente;
     private int idEsame;
+    private int idPrenotazione;
+    private String nrCarta;
     
-	public PagamentoEsame(int idPagamento, LocalDateTime dataPagamento, BigDecimal importo, int idUtente, int idEsame) {
+	public PagamentoEsame( LocalDateTime dataPagamento, BigDecimal importo, int idUtente, int idEsame,int idPrenotazione,String nrCarta) {
 		super();
-		this.idPagamento = idPagamento;
+		
 		this.dataPagamento = dataPagamento;
 		this.importo = importo;
 		this.idUtente = idUtente;
 		this.idEsame = idEsame;
+		this.idPrenotazione =idPrenotazione;
+		this.nrCarta =nrCarta;
+	}
+
+	public String getNrCarta() {
+		return nrCarta;
+	}
+
+	public void setNrCarta(String nrCarta) {
+		this.nrCarta = nrCarta;
+	}
+
+	public int getIdPrenotazione() {
+		return idPrenotazione;
+	}
+
+	public void setIdPrenotazione(int idPrenotazione) {
+		this.idPrenotazione = idPrenotazione;
 	}
 
 	public int getIdPagamento() {
